@@ -1,0 +1,31 @@
+pipeline {   
+  agent any      
+       
+  
+  environment {     
+    DOCKERHUB_CREDENTIALS= credentials('dockerhubcredentials')  
+    dockerhubusername = 'mruthunjaya'
+    
+  }    
+  stages {         
+    stage("Git Checkout"){           
+      steps{   
+          
+           git branch: 'master',
+           url: 'https://github.com/vinodpalleda/WebApp.git'
+    	echo 'Git Checkout Completed'            
+      }        
+    }
+    
+        stage('Build') {
+            steps {
+                sh 'sudo mvn clean install'
+               
+            }
+        }
+    
+    stage('Build Docker Image') {         
+      steps{  
+        sh 'pwd'
+	    sh 'sudo docker build -t $dockerhubusername/samplewebproject:$BUILD_NUMBER .'           
+        echo 'Build Image Comple…
